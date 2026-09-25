@@ -17,7 +17,7 @@ jobs:
     steps:
       - name: Check Actions Run
         env:
-          GH_TOKEN: ${{ secrets.OTHER_GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
           REPO: ${{ secrets.REPO }}
         run: |
           set -e
