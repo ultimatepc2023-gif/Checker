@@ -11,17 +11,19 @@ permissions:
   contents: read
 
 jobs:
-  check:
+  Archiver:
     runs-on: ubuntu-latest
 
     steps:
       - name: Check Actions Run
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_TOKEN: ${{ secrets.OTHER_GITHUB_TOKEN }}
           REPO: ${{ secrets.REPO }}
         run: |
           set -e
-          
+
+          echo "Checking repository: $REPO"
+
           RUNNING=$(gh run list \
             --repo "$REPO" \
             --status in_progress \
@@ -36,12 +38,24 @@ jobs:
             --json databaseId \
             --jq 'length')
 
+          echo "Running Actions : $RUNNING"
+          echo "Queued Actions  : $QUEUED"
+
           if [ "$RUNNING" -eq 0 ] && [ "$QUEUED" -eq 0 ]; then
+
+            echo "No Actions are running or queued."
+            echo "Triggering main.yaml..."
 
             gh workflow run main.yaml \
               --repo "$REPO" \
               --ref main
 
+            echo "main.yaml triggered successfully."
+
           else
+
+            echo "An Action is currently running or queued."
+            echo "Not triggering main.yaml."
+            echo "Archiver finished."
 
           fi
