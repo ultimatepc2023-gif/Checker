@@ -17,7 +17,7 @@ jobs:
     steps:
       - name: Check Actions Run
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_TOKEN: ${{ secrets.OTHER_GITHUB_TOKEN }}
           REPO: ${{ secrets.REPO }}
         run: |
           set -e
@@ -46,11 +46,11 @@ jobs:
           if [ "$RUNNING" -eq 0 ] && [ "$QUEUED" -eq 0 ]; then
 
             echo "No Actions are running or queued."
-            echo "Triggering main.yml..."
+            echo "Triggering main.yml in THIS repository..."
 
             gh workflow run main.yml \
-              --repo "$REPO" \
-              --ref main
+              --repo "${{ github.repository }}" \
+              --ref "${{ github.ref_name }}"
 
             echo "main.yml triggered successfully."
 
