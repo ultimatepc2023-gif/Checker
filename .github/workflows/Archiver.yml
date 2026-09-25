@@ -11,7 +11,7 @@ permissions:
   contents: read
 
 jobs:
-  Archiver:
+  check:
     runs-on: ubuntu-latest
 
     steps:
@@ -44,18 +44,18 @@ jobs:
           if [ "$RUNNING" -eq 0 ] && [ "$QUEUED" -eq 0 ]; then
 
             echo "No Actions are running or queued."
-            echo "Triggering main.yaml..."
+            echo "Triggering main.yml..."
 
-            gh workflow run main.yaml \
+            gh workflow run main.yml \
               --repo "$REPO" \
               --ref main
 
-            echo "main.yaml triggered successfully."
+            echo "main.yml triggered successfully."
 
           else
 
             echo "An Action is currently running or queued."
-            echo "Not triggering main.yaml."
+            echo "Not triggering main.yml."
             echo "Archiver finished."
 
           fi
