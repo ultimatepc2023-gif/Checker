@@ -11,7 +11,7 @@ permissions:
   contents: read
 
 jobs:
-  check:
+  Archiver:
     runs-on: ubuntu-latest
 
     steps:
@@ -22,7 +22,9 @@ jobs:
         run: |
           set -e
 
+          echo "=========================================="
           echo "Checking repository: $REPO"
+          echo "=========================================="
 
           RUNNING=$(gh run list \
             --repo "$REPO" \
@@ -54,7 +56,7 @@ jobs:
 
           else
 
-            echo "An Action is currently running or queued."
+            echo "An Action is running or queued."
             echo "Not triggering main.yml."
             echo "Archiver finished."
 
