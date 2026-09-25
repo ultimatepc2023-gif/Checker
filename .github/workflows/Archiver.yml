@@ -1,0 +1,47 @@
+name: Archiver
+
+on:
+  workflow_dispatch:
+
+  repository_dispatch:
+    types: [Archiver]
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check Actions Run
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ secrets.REPO }}
+        run: |
+          set -e
+          
+          RUNNING=$(gh run list \
+            --repo "$REPO" \
+            --status in_progress \
+            --limit 100 \
+            --json databaseId \
+            --jq 'length')
+
+          QUEUED=$(gh run list \
+            --repo "$REPO" \
+            --status queued \
+            --limit 100 \
+            --json databaseId \
+            --jq 'length')
+
+          if [ "$RUNNING" -eq 0 ] && [ "$QUEUED" -eq 0 ]; then
+
+            gh workflow run main.yaml \
+              --repo "$REPO" \
+              --ref main
+
+          else
+
+          fi
